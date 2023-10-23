@@ -1,9 +1,9 @@
 package kg.test.paymentsystem.controller.auth;
 
-import kg.test.paymentsystem.dto.AuthenticationRequestDto;
-import kg.test.paymentsystem.dto.AuthenticationResponseDto;
+import kg.test.paymentsystem.dtos.AuthenticationRequestDto;
+import kg.test.paymentsystem.dtos.AuthenticationResponseDto;
 import kg.test.paymentsystem.service.auth.AuthenticationService;
-import kg.test.paymentsystem.dto.RegisterRequestDto;
+import kg.test.paymentsystem.dtos.RegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,8 +1,8 @@
 package kg.test.paymentsystem.service.auth;
 
-import kg.test.paymentsystem.dto.AuthenticationRequestDto;
-import kg.test.paymentsystem.dto.AuthenticationResponseDto;
-import kg.test.paymentsystem.dto.RegisterRequestDto;
+import kg.test.paymentsystem.dtos.AuthenticationRequestDto;
+import kg.test.paymentsystem.dtos.AuthenticationResponseDto;
+import kg.test.paymentsystem.dtos.RegisterRequestDto;
 import kg.test.paymentsystem.entity.user.Role;
 import kg.test.paymentsystem.entity.user.User;
 import kg.test.paymentsystem.repository.UserRepository;

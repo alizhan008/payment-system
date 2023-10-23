@@ -1,8 +1,10 @@
 package kg.test.paymentsystem.entity.card;
 
 import jakarta.persistence.*;
+import kg.test.paymentsystem.entity.user.User;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -16,7 +18,7 @@ import java.time.LocalDate;
 public abstract class Card {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -31,5 +33,12 @@ public abstract class Card {
 
     @Column(name = "issue_date")
     private LocalDate issueDate;
+
+    @Column(name = "balance")
+    private BigDecimal balance;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

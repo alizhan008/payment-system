@@ -4,4 +4,5 @@ import kg.test.paymentsystem.entity.card.MasterCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MasterCardRepository extends JpaRepository<MasterCard,Long> {
+    MasterCard findByCardNumber(Integer cardNumber);
 }

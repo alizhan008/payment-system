@@ -1,4 +1,4 @@
-package kg.test.paymentsystem.dto;
+package kg.test.paymentsystem.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,10 @@
-package kg.test.paymentsystem.dto;
+package kg.test.paymentsystem.dtos;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -19,5 +21,8 @@ public class CardRequestDto {
     private Integer cardNumber;
 
     private LocalDate issueDate;
+
+    private BigDecimal balance;
+
 
 }

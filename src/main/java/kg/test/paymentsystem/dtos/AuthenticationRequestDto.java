@@ -1,4 +1,4 @@
-package kg.test.paymentsystem.dto;
+package kg.test.paymentsystem.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponseDto {
-    private String token;
+public class AuthenticationRequestDto {
+    private String email;
+    private String password;
 }

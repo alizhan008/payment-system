@@ -1,6 +1,7 @@
 package kg.test.paymentsystem.entity.user;
 
 import jakarta.persistence.*;
+import kg.test.paymentsystem.entity.card.Card;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,10 +23,18 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Card> cards;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     @Override
