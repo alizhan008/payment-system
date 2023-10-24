@@ -1,8 +1,8 @@
 package kg.test.paymentsystem.service.paymentcenter;
 
+import kg.test.paymentsystem.dtos.issue.CardIssueResponseDto;
 import kg.test.paymentsystem.entity.card.Card;
 import kg.test.paymentsystem.entity.card.MasterCard;
-import kg.test.paymentsystem.entity.user.User;
 import kg.test.paymentsystem.exceptions.CardNotFoundException;
 import kg.test.paymentsystem.exceptions.InsufficientBalanceException;
 import kg.test.paymentsystem.repository.MasterCardRepository;
@@ -18,34 +18,49 @@ import java.util.*;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class MasterCardProcessingCenter implements PaymentSystem {
+public class MasterCardProcessingCenter extends AbstractPaymentSystem {
 
     private final MasterCardRepository masterCardRepository;
 
     private final UserRepository userRepository;
 
-    @Override
-    public Integer generateRandom16DigitNumber() {
-        Random random = new Random();
-        Integer number = null;
-        for (int i = 0; i < 16; i++) {
-            number = random.nextInt(10);
-        }
-        return number;
+    private static final BigDecimal AMOUNT = new BigDecimal(1000); //Симуляция остатка на счету
 
+    @Override
+    public Long generateUnique16DigitNumber() {
+        List<Integer> digits = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            digits.add(i);
+        }
+
+        Collections.shuffle(digits);
+
+        StringBuilder uniqueNumber = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            uniqueNumber.append(digits.get(i));
+        }
+        return Long.parseLong(uniqueNumber.toString());
     }
 
     @Override
-    public void cardIssue(Card card, User user) {
+    public CardIssueResponseDto cardIssue(Card card, String userEmail) {
         var masterCard = new MasterCard(card);
+        var user = userRepository.findByEmail(userEmail).orElseThrow();
         masterCard.setIssueDate(LocalDate.now());
-        masterCard.setCardNumber(generateRandom16DigitNumber());
+        masterCard.setCardNumber(generateUnique16DigitNumber());
+        masterCard.setBalance(AMOUNT);
         masterCard.setUser(user);
 
         masterCardRepository.save(masterCard);
-        user.getCards().add(masterCard);
+        user.getMasterCards().add(masterCard);
         userRepository.save(user);
 
+         return CardIssueResponseDto.builder()
+                .bankName(masterCard.getBankName())
+                .type(masterCard.getType())
+                .cardNumber(masterCard.getCardNumber())
+                .issueDate(masterCard.getIssueDate())
+                .build();
     }
 
     @Override

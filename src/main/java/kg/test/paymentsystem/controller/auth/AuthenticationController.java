@@ -1,9 +1,9 @@
 package kg.test.paymentsystem.controller.auth;
 
-import kg.test.paymentsystem.dtos.AuthenticationRequestDto;
-import kg.test.paymentsystem.dtos.AuthenticationResponseDto;
+import kg.test.paymentsystem.dtos.auth.AuthenticationRequestDto;
+import kg.test.paymentsystem.dtos.auth.AuthenticationResponseDto;
 import kg.test.paymentsystem.service.auth.AuthenticationService;
-import kg.test.paymentsystem.dtos.RegisterRequestDto;
+import kg.test.paymentsystem.dtos.auth.RegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
 public class AuthenticationController {
+
     private final AuthenticationService service;
 
     @PostMapping("/register")
@@ -26,4 +27,5 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody AuthenticationRequestDto request){
         return ResponseEntity.ok(service.authenticate(request));
     }
+
 }

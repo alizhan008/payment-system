@@ -1,8 +1,8 @@
 package kg.test.paymentsystem.service.auth;
 
-import kg.test.paymentsystem.dtos.AuthenticationRequestDto;
-import kg.test.paymentsystem.dtos.AuthenticationResponseDto;
-import kg.test.paymentsystem.dtos.RegisterRequestDto;
+import kg.test.paymentsystem.dtos.auth.AuthenticationRequestDto;
+import kg.test.paymentsystem.dtos.auth.AuthenticationResponseDto;
+import kg.test.paymentsystem.dtos.auth.RegisterRequestDto;
 import kg.test.paymentsystem.entity.user.Role;
 import kg.test.paymentsystem.entity.user.User;
 import kg.test.paymentsystem.repository.UserRepository;
@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
     public AuthenticationResponseDto register(RegisterRequestDto request) {
         var user = User.builder()
                 .firstName(request.getFirstName())

@@ -1,4 +1,4 @@
-package kg.test.paymentsystem.dtos;
+package kg.test.paymentsystem.dtos.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequestDto {
+
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+
 }

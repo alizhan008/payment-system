@@ -2,6 +2,9 @@ package kg.test.paymentsystem.entity.user;
 
 import jakarta.persistence.*;
 import kg.test.paymentsystem.entity.card.Card;
+import kg.test.paymentsystem.entity.card.Elcard;
+import kg.test.paymentsystem.entity.card.MasterCard;
+import kg.test.paymentsystem.entity.card.Visa;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,8 +35,14 @@ public class User implements UserDetails {
 
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private List<Card> cards;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Visa> visas;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<MasterCard> masterCards;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Elcard> elcards;
 
     @Enumerated(EnumType.STRING)
     private Role role;

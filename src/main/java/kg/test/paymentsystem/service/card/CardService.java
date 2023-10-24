@@ -1,8 +1,9 @@
-package kg.test.paymentsystem.service.issue;
+package kg.test.paymentsystem.service.card;
 
-import kg.test.paymentsystem.dtos.CardRequestDto;
+import kg.test.paymentsystem.dtos.issue.CardIssueRequestDto;
+import kg.test.paymentsystem.dtos.issue.CardIssueResponseDto;
+import kg.test.paymentsystem.dtos.refill.CardRefillRequestDto;
 import kg.test.paymentsystem.entity.card.Card;
-import kg.test.paymentsystem.entity.user.User;
 import kg.test.paymentsystem.service.paymentcenter.ElcardProcessingCenter;
 import kg.test.paymentsystem.service.paymentcenter.MasterCardProcessingCenter;
 import kg.test.paymentsystem.service.paymentcenter.PaymentSystem;
@@ -30,38 +31,27 @@ public class CardService {
         };
     }
 
-    public User getCurrentUser() {
+    public String getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return User.builder()
-                .email(userDetails.getUsername())
-                .build();
+        return userDetails.getUsername();
     }
 
-    public void issueCard(CardRequestDto cardRequestDto){
-        Card card = Card.builder()
-                .bankName(cardRequestDto.getBankName())
-                .type(cardRequestDto.getType())
-                .build();
-        var user = getCurrentUser();
+    public CardIssueResponseDto issueCard(CardIssueRequestDto cardRequestDto){
+        Card card = new Card(cardRequestDto);
+        var userEmail = getCurrentUser();
         PaymentSystem paymentSystem = getProcessingCenter(card.getType());
-        paymentSystem.cardIssue(card,user);
+        return paymentSystem.cardIssue(card,userEmail);
     }
 
-    public void cardRefill(CardRequestDto cardRequestDto){
-        Card card = Card.builder()
-                .cardNumber(cardRequestDto.getCardNumber())
-                .balance(cardRequestDto.getBalance())
-                .build();
+    public void cardRefill(CardRefillRequestDto cardRefillDto){
+        Card card = new Card(cardRefillDto);
         PaymentSystem paymentSystem = getProcessingCenter(card.getType());
         paymentSystem.cardRefill(card);
     }
 
-    public void chargeTheCard(CardRequestDto cardRequestDto){
-        Card card = Card.builder()
-                .cardNumber(cardRequestDto.getCardNumber())
-                .balance(cardRequestDto.getBalance())
-                .build();
+    public void chargeTheCard(){
+        Card card = new Card();
         PaymentSystem paymentSystem = getProcessingCenter(card.getType());
         paymentSystem.chargeTheCard(card);
     }

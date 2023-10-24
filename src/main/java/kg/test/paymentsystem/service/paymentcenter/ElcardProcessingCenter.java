@@ -1,8 +1,8 @@
 package kg.test.paymentsystem.service.paymentcenter;
 
+import kg.test.paymentsystem.dtos.issue.CardIssueResponseDto;
 import kg.test.paymentsystem.entity.card.Card;
 import kg.test.paymentsystem.entity.card.Elcard;
-import kg.test.paymentsystem.entity.user.User;
 import kg.test.paymentsystem.exceptions.CardNotFoundException;
 import kg.test.paymentsystem.exceptions.InsufficientBalanceException;
 import kg.test.paymentsystem.repository.ElcardRepository;
@@ -13,39 +13,56 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class ElcardProcessingCenter implements PaymentSystem {
+public class ElcardProcessingCenter extends AbstractPaymentSystem {
 
     private final ElcardRepository elcardRepository;
 
     private final UserRepository userRepository;
 
-    @Override
-    public Integer generateRandom16DigitNumber() {
-        Random random = new Random();
-        Integer number = null;
-        for (int i = 0; i < 16; i++) {
-            number = random.nextInt(10);
-        }
-        return number;
+    private static final BigDecimal AMOUNT = new BigDecimal(500); //Симуляция остатка на счету
 
+    @Override
+    public Long generateUnique16DigitNumber() {
+        List<Integer> digits = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            digits.add(i);
+        }
+
+        Collections.shuffle(digits);
+
+        StringBuilder uniqueNumber = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            uniqueNumber.append(digits.get(i));
+        }
+        return Long.parseLong(uniqueNumber.toString());
     }
 
     @Override
-    public void cardIssue(Card card, User user) {
+    public CardIssueResponseDto cardIssue(Card card, String userEmail) {
         var elcard = new Elcard(card);
+        var user = userRepository.findByEmail(userEmail).orElseThrow();
         elcard.setIssueDate(LocalDate.now());
-        elcard.setCardNumber(generateRandom16DigitNumber());
+        elcard.setCardNumber(generateUnique16DigitNumber());
+        elcard.setBalance(AMOUNT);
         elcard.setUser(user);
 
         elcardRepository.save(elcard);
-        user.getCards().add(elcard);
+        user.getElcards().add(elcard);
         userRepository.save(user);
 
+        return CardIssueResponseDto.builder()
+                .bankName(elcard.getBankName())
+                .type(elcard.getType())
+                .cardNumber(elcard.getCardNumber())
+                .issueDate(elcard.getIssueDate())
+                .build();
     }
 
     @Override
@@ -63,7 +80,6 @@ public class ElcardProcessingCenter implements PaymentSystem {
         } else {
             throw new CardNotFoundException("Карта не найдена");
         }
-
     }
 
     @Override
@@ -90,7 +106,6 @@ public class ElcardProcessingCenter implements PaymentSystem {
         } catch (CardNotFoundException e) {
             throw new CardNotFoundException("Карта не найдена");
         }
-
     }
 
 }

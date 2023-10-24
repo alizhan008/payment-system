@@ -1,11 +1,11 @@
 package kg.test.paymentsystem.service.paymentcenter;
 
+import kg.test.paymentsystem.dtos.issue.CardIssueResponseDto;
 import kg.test.paymentsystem.entity.card.Card;
-import kg.test.paymentsystem.entity.user.User;
 
 public interface PaymentSystem {
-    Integer generateRandom16DigitNumber();
-    void cardIssue(Card card, User user);
+    Long generateUnique16DigitNumber();
+    CardIssueResponseDto cardIssue(Card card, String userEmail);
     void cardRefill(Card card);
     void chargeTheCard(Card card);
 

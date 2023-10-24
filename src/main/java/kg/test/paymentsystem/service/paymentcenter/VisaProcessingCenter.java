@@ -1,52 +1,73 @@
 package kg.test.paymentsystem.service.paymentcenter;
 
+import kg.test.paymentsystem.dtos.issue.CardIssueResponseDto;
 import kg.test.paymentsystem.entity.card.Card;
-import kg.test.paymentsystem.entity.card.MasterCard;
 import kg.test.paymentsystem.entity.card.Visa;
-import kg.test.paymentsystem.entity.user.User;
 import kg.test.paymentsystem.exceptions.CardNotFoundException;
 import kg.test.paymentsystem.exceptions.InsufficientBalanceException;
 import kg.test.paymentsystem.repository.UserRepository;
 import kg.test.paymentsystem.repository.VisaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class VisaProcessingCenter implements PaymentSystem {
+public class VisaProcessingCenter extends AbstractPaymentSystem {
 
     private final VisaRepository visaRepository;
 
     private final UserRepository userRepository;
 
-    @Override
-    public Integer generateRandom16DigitNumber() {
-        Random random = new Random();
-        Integer number = null;
-        for (int i = 0; i < 16; i++) {
-            number = random.nextInt(10);
-        }
-        return number;
+    private static final BigDecimal AMOUNT = new BigDecimal(1500); //Симуляция остатка на счету
 
+    @Override
+    public Long generateUnique16DigitNumber() {
+        List<Integer> digits = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            digits.add(i);
+        }
+
+        Collections.shuffle(digits);
+
+        StringBuilder uniqueNumber = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            uniqueNumber.append(digits.get(i));
+        }
+        return Long.parseLong(uniqueNumber.toString());
     }
 
     @Override
-    public void cardIssue(Card card, User user) {
-        var visaCard = new Visa(card);
-        visaCard.setIssueDate(LocalDate.now());
-        visaCard.setCardNumber(generateRandom16DigitNumber());
-        visaCard.setUser(user);
+    public CardIssueResponseDto cardIssue(Card card, String userEmail) {
+        try {
+            var visaCard = new Visa(card);
+            var user = userRepository.findByEmail(userEmail).orElseThrow();
+            visaCard.setIssueDate(LocalDate.now());
+            visaCard.setCardNumber(generateUnique16DigitNumber());
+            visaCard.setBalance(AMOUNT);
+            visaCard.setUser(user);
 
-        visaRepository.save(visaCard);
-        user.getCards().add(visaCard);
-        userRepository.save(user);
+            visaRepository.save(visaCard);
+            user.getVisas().add(visaCard);
+            userRepository.save(user);
 
+            return CardIssueResponseDto.builder()
+                    .bankName(visaCard.getBankName())
+                    .type(visaCard.getType())
+                    .cardNumber(visaCard.getCardNumber())
+                    .issueDate(visaCard.getIssueDate())
+                    .build();
+        }catch (UsernameNotFoundException unf){
+            throw new UsernameNotFoundException("Пользователь не найден!");
+        }
     }
 
     @Override
@@ -64,7 +85,6 @@ public class VisaProcessingCenter implements PaymentSystem {
         } else {
             throw new CardNotFoundException("Карта не найдена");
         }
-
     }
 
     @Override
@@ -91,7 +111,6 @@ public class VisaProcessingCenter implements PaymentSystem {
         } catch (CardNotFoundException e) {
             throw new CardNotFoundException("Карта не найдена");
         }
-
     }
 
 }

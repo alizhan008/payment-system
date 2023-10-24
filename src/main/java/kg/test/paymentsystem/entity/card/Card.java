@@ -1,6 +1,8 @@
 package kg.test.paymentsystem.entity.card;
 
 import jakarta.persistence.*;
+import kg.test.paymentsystem.dtos.issue.CardIssueRequestDto;
+import kg.test.paymentsystem.dtos.refill.CardRefillRequestDto;
 import kg.test.paymentsystem.entity.user.User;
 import lombok.*;
 
@@ -11,11 +13,8 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@EqualsAndHashCode
 @MappedSuperclass
-@Entity
-public abstract class Card {
+public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +28,7 @@ public abstract class Card {
     private String type;
 
     @Column(name = "card_number")
-    private Integer cardNumber;
+    private Long cardNumber;
 
     @Column(name = "issue_date")
     private LocalDate issueDate;
@@ -40,5 +39,15 @@ public abstract class Card {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Card(CardIssueRequestDto cardIssueResponseDto){
+        this.setBankName(cardIssueResponseDto.getBankName());
+        this.setType(cardIssueResponseDto.getType());
+    }
+    public Card(CardRefillRequestDto cardRefillDto){
+        this.setType(cardRefillDto.getType());
+        this.setCardNumber(cardRefillDto.getCardNumber());
+        this.setBalance(cardRefillDto.getBalance());
+    }
 
 }
