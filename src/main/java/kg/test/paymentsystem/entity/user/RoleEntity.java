@@ -1,5 +1,5 @@
 package kg.test.paymentsystem.entity.user;
 
-public enum Role {
+public enum RoleEntity {
     USER,ADMIN
 }

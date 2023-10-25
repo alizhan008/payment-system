@@ -1,10 +1,9 @@
 package kg.test.paymentsystem.entity.user;
 
 import jakarta.persistence.*;
-import kg.test.paymentsystem.entity.card.Card;
-import kg.test.paymentsystem.entity.card.Elcard;
-import kg.test.paymentsystem.entity.card.MasterCard;
-import kg.test.paymentsystem.entity.card.Visa;
+import kg.test.paymentsystem.entity.card.ElcardEntity;
+import kg.test.paymentsystem.entity.card.MasterCardEntity;
+import kg.test.paymentsystem.entity.card.VisaEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "_user")
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,16 +36,16 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Visa> visas;
+    private List<VisaEntity> visas;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<MasterCard> masterCards;
+    private List<MasterCardEntity> masterCards;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Elcard> elcards;
+    private List<ElcardEntity> elcards;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private RoleEntity role;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -80,4 +80,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

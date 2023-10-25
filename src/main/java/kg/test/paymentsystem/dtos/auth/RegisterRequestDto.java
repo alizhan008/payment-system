@@ -1,19 +1,28 @@
 package kg.test.paymentsystem.dtos.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class RegisterRequestDto {
 
+    @NotBlank
+    @NotEmpty
     private String firstName;
+
+    @NotBlank
+    @NotEmpty
     private String lastName;
+
+    @NotBlank
+    @NotEmpty
     private String email;
+
+    @NotBlank
+    @NotEmpty
     private String password;
 
 }

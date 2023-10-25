@@ -1,6 +1,6 @@
 package kg.test.paymentsystem.config;
 
-import kg.test.paymentsystem.repository.UserRepository;
+import kg.test.paymentsystem.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

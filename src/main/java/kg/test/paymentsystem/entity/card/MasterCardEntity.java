@@ -4,19 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "master_card")
-public class MasterCard extends Card implements Serializable {
-    public MasterCard(Card card){
+public class MasterCardEntity extends CardEntity {
+
+    public MasterCardEntity(CardEntity card){
         this.setCardNumber(card.getCardNumber());
         this.setBankName(card.getBankName());
         this.setType(card.getType());
         this.setIssueDate(card.getIssueDate());
     }
+
 }

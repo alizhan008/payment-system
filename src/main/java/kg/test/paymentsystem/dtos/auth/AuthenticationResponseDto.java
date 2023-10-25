@@ -1,14 +1,10 @@
 package kg.test.paymentsystem.dtos.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class AuthenticationResponseDto {
     private String token;
 }
